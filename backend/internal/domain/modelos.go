@@ -1,7 +1,7 @@
 package modelos
 
 import (
-	"backend/internal/database" // Importa el paquete de base de datos
+	"backend/internal/repository/mysql" // Importa el paquete de base de datos
 	"time"
 )
 

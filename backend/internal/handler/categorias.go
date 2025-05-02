@@ -1,11 +1,10 @@
-package rutas
+package handler
 
 import (
-	"backend/database"
-	"backend/modelos"
+	"backend/internal/repository/mysql"
+	"backend/internal/domain"
 	"backend/dto"
 	"net/http"
-
 	"github.com/gin-gonic/gin"
 	"github.com/gosimple/slug"
 )

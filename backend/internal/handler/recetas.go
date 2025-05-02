@@ -1,4 +1,4 @@
-package rutas
+package handler
 
 import (
 	"path/filepath"
