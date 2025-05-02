@@ -1,8 +1,9 @@
 package modelos
 
 import (
-	"backend/internal/repository/mysql" // Importa el paquete de base de datos
 	"time"
+
+	"google.golang.org/genproto/googleapis/spanner/admin/database/v1"
 )
 
 // Definición de la estructura de la tabla Categoria

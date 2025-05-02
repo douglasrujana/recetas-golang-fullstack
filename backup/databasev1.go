@@ -1,10 +1,10 @@
 package database
 
 import (
+	"backend/internal/config"
 	"fmt"
 	"log"
-	"backend/internal/config"
-	"backend/internal/database" // Cambia "tu-modulo" por el nombre de tu módulo real
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )

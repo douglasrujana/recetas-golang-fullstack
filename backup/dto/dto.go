@@ -39,4 +39,4 @@ type RecetaDTO struct {
 	Tiempo string `json:"tiempo"`
 	Descripcion string `json:"descripcion"`
 	Foto string `json:"foto"`
-}
+} 

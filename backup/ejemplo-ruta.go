@@ -2,12 +2,13 @@ package rutas // rutas de tipo handler
 
 import (
 	"backend/dto" // Importa el paquete dto para usar el DTO EjemploDTO
+	"fmt"
+	"net/http"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"time"
-	"fmt"
-	"reflect"
-	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -62,7 +63,7 @@ func EjemploPostDTO(c *gin.Context) {
 
 	// Simulando una respuesta de ejemplo
 	response := map[string]string{
-		"message": "Método Post DTO",
+		"message":  "Método Post DTO",
 		"correo":   body.Correo,
 		"password": body.Password,
 	}
