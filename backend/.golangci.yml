@@ -1,0 +1,46 @@
+# .golangci.yml
+run:
+  timeout: 5m
+  skip-dirs:
+    - vendor/
+linters:
+  enable:
+    - gofmt
+    - goimports
+    - revive # Reemplazo mejorado de golint
+    - govet
+    - errcheck
+    - staticcheck
+    - unused
+    - ineffassign
+    - typecheck
+    - gosimple
+    - structcheck
+    - varcheck
+    - nilerr
+    - bodyclose
+    - exportloopref
+    - goconst
+    - gocyclo # Controla la complejidad ciclomática
+    - dogsled # Detecta asignaciones redundantes
+    - dupl # Busca código duplicado
+    - errorlint # Buenas prácticas con errores envueltos
+    - exhaustive # Verifica exhaustividad en switch y maps
+    - funlen # Controla longitud de funciones
+    - gocritic # Muchas comprobaciones valiosas
+    - whitespace
+  disable:
+    - golint # Deprecado, usamos revive
+  # Puedes ajustar la configuración de linters específicos aquí
+linters-settings:
+  gocyclo:
+    min-complexity: 15 # Ajusta según tu preferencia (10-15 es común)
+  funlen:
+    lines: 80 # Líneas máximas por función
+    statements: 50 # Sentencias máximas por función
+  goimports:
+    local-prefixes: github.com/douglasrujana/recetas-golang-fullstack # Ajusta a tu path de módulo
+issues:
+  exclude-use-default: false
+  max-issues-per-linter: 0 # Muestra todos los issues
+  max-same-issues: 0

@@ -1,0 +1,10 @@
+# config.yaml (Este archivo se añade a .gitignore y se crea localmente)
+server:
+  port: 8080 # Puedes sobreescribir con variables de entorno si configuras Viper para ello
+database:
+  user: "root"
+  password: ""
+  host: "127.0.0.1"
+  port: 3306
+  name: "golang-recetas"
+  params: "parseTime=true"

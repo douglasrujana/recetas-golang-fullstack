@@ -1,12 +1,13 @@
+//go:build ignore
+// +build ignore
+
 package handler
 
 import (
 	"path/filepath"
 	"time"
-	"backend/database"
-	"backend/dto"
-	"backend/modelos"
-	"backend/utils" // Importa el paquete de tiempo para formatear la fecha
+	"backend/internal/handler/dto"
+	"backend/internal/utils" // Importa el paquete de tiempo para formatear la fecha
 	"net/http"
 	"strconv"
 	"github.com/gin-gonic/gin"

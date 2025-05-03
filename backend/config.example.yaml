@@ -1,0 +1,10 @@
+# config.example.yaml (Este SÍ se comitea)
+server:
+  port: 8080
+database:
+  user: "usuario_ejemplo"
+  password: "password_ejemplo"
+  host: "localhost"
+  port: 3306
+  name: "recetas_db_ejemplo"
+  params: "parseTime=true" # Ejemplo de parámetro útil

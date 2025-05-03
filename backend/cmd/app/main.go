@@ -1,92 +1,90 @@
-// backend/cmd/api/main.go
-
+// backend/cmd/api/main.go (Enfoque: Solo Categorías)
 package main
 
 import (
 	"fmt"
 	"log"
-	"net/http" // Necesario para router.GET("/") simple
+	"net/http"
 
-	"backend/internal/config" // Configuración (¡Bien!)
-	// --- [✨ NUEVA ARQUITECTURA] ---
-	"backend/internal/database"  // Nuestro nuevo paquete para la conexión DB
-	"backend/internal/repository/mysql" // Implementaciones del repositorio MySQL/Gorm
-	"backend/internal/service"   // Lógica de negocio
-	"backend/internal/handler"   // Handlers HTTP (el antiguo 'rutas')
-	// ---------------------------------
-
-	// "backend/internal/domain" // Domain usualmente no se importa en main, sino en repo/service/handler
+	"backend/internal/config"   // Configuración
+	"backend/internal/database"  // Conexión BD
+	// "backend/internal/domain" // Puede no ser necesario importar aquí directamente
+	"backend/internal/handler"   // Handlers (el paquete)
+	// "backend/internal/repository" // Puede no ser necesario importar aquí directamente
+	"backend/internal/repository/mysql" // Implementación MySQL del Repositorio
+	"backend/internal/service"   // Servicios (el paquete)
 
 	"github.com/gin-gonic/gin"
+	// Asegúrate de que el driver MySQL esté importado (usualmente en database.go)
+	// _ "github.com/go-sql-driver/mysql"
 )
 
 func main() {
+	log.Println("🚀 Iniciando aplicación (Enfoque: Solo Categorías)...")
+
 	// --- 1. Carga de Configuración ---
-	config.CargarVariablesEntorno()
-	cfg := config.AppConfig // Accedemos a la configuración cargada
-	fmt.Println("Corriendo en entorno:", cfg.AppEnv)
-	// [⚠️ VALIDACIÓN] Asegúrate que el puerto DB_PORT en .env (5432) es correcto para MySQL o cámbialo.
-
-	// --- 2. Inicialización de Dependencias Core (Base de Datos) ---
-	// [✨ ELEGANCIA] Llamamos a la función del paquete 'database'.
-	dbInstance, err := database.ConnectDB(cfg)
+	cfg, err := config.LoadConfig(".")
 	if err != nil {
-		log.Fatalf("❌ Error fatal al inicializar la base de datos: %v", err)
+		log.Fatalf("❌ Error cargando config: %v", err)
 	}
-	// sqlDB, _ := dbInstance.DB() // Podrías querer cerrar el pool al final
-	// defer sqlDB.Close() // Cierre ordenado al terminar main (opcional pero buena práctica)
+	fmt.Println("✅ Configuración cargada.")
+	fmt.Println("   - Entorno:", cfg.AppEnv)
+	fmt.Println("   - Puerto Servidor:", cfg.Server.Port)
+	// ... otros logs de config seguros ...
 
-	// --- 3. Inyección de Dependencias (¡La Magia!) ---
-	// Aquí creamos las instancias de cada capa, inyectando las dependencias necesarias.
-	// El orden es importante: Repos -> Services -> Handlers
+	// --- 2. Inicialización de Base de Datos ---
+	dbInstance, err := database.ConnectDB(cfg.Database)
+	if err != nil {
+		log.Fatalf("❌ Error inicializando BD: %v", err)
+	}
+	log.Println("✅ Conexión a base de datos establecida.")
 
-	// [🏗️ REPOSITORIOS] Crear instancias de los repositorios, pasando la conexión DB.
-	// (Necesitarás crear estas funciones constructoras `New...Repository` en `internal/repository/mysql/`)
-	userRepo := mysql.NewUserRepository(dbInstance)
+	// --- 3. Inyección de Dependencias (Solo Categorías) ---
+	log.Println("🏗️  Inicializando dependencias (Solo Categorías)...")
+
+	// [REPOSITORIOS]
 	categoriaRepo := mysql.NewCategoriaRepository(dbInstance)
-	recetaRepo := mysql.NewRecetaRepository(dbInstance)
-	// ... otros repositorios si los hubiera ...
+	log.Println("   - Repositorio Categorías inicializado.")
 
-	// [🏗️ SERVICIOS] Crear instancias de los servicios, pasando los repositorios.
-	// (Necesitarás crear estas funciones constructoras `New...Service` en `internal/service/`)
-	authService := service.NewAuthService(userRepo, cfg.SecretKey) // Auth necesita el repo de user y la secret key
+	// [SERVICIOS]
 	categoriaService := service.NewCategoriaService(categoriaRepo)
-	recetaService := service.NewRecetaService(recetaRepo)
-	// ... otros servicios ...
+	log.Println("   - Servicio Categorías inicializado.")
 
-	// [🏗️ HANDLERS] Crear instancias de los handlers, pasando los servicios.
-	// (Necesitarás crear estas funciones constructoras `New...Handler` en `internal/handler/`)
-	authHandler := handler.NewAuthHandler(authService)
+	// [HANDLERS]
 	categoriaHandler := handler.NewCategoriaHandler(categoriaService)
-	recetaHandler := handler.NewRecetaHandler(recetaService)
-	uploadHandler := handler.NewUploadHandler() // Asumiendo que no necesita servicios por ahora
-	// ... otros handlers ...
+	log.Println("   - Handler Categorías inicializado.")
+	log.Println("✅ Dependencias de Categorías inicializadas.")
+
 
 	// --- 4. Inicialización del Router Gin ---
-	gin.SetMode(gin.ReleaseMode) // O gin.DebugMode
-	router := gin.Default()      // Incluye logger y recovery middleware
+	if cfg.AppEnv == "production" {
+		gin.SetMode(gin.ReleaseMode)
+	}
+	router := gin.Default()
+	log.Printf("✅ Router Gin inicializado en modo: %s.\n", gin.Mode())
 
-	// --- 5. Configuración de Rutas (Delegada) ---
-	// [✨ ELEGANCIA] Toda la definición de rutas se mueve a una función dedicada en el paquete handler.
-	// Le pasamos el router y las instancias de los handlers que necesita.
-	// (Necesitarás crear esta función `RegisterRoutes` en `internal/handler/routes.go`)
-	handler.RegisterRoutes(router, authHandler, categoriaHandler, recetaHandler, uploadHandler)
 
-	// [✅ BUENA PRÁCTICA] Configurar rutas estáticas y 404 sigue estando bien aquí o en RegisterRoutes.
+	// --- 5. Configuración de Rutas (Solo Categorías) ---
+	// Pasamos SOLO el handler de categorías.
+	handler.RegisterRoutes(router, categoriaHandler)
+	log.Println("✅ Rutas de Categorías registradas.")
+
+	// [Rutas Base / No API]
 	router.Static("/public", "./public")
-	router.Static("/uploads", "./uploads")
+	router.Static("/uploads", "./uploads") // Dejar por ahora, puede ser necesario
 	router.NoRoute(func(c *gin.Context) {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Ruta no encontrada"}) // Usar http status codes
+		c.JSON(http.StatusNotFound, gin.H{"error": "Ruta no encontrada"})
 	})
-	// Simple health check/root endpoint
 	router.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "API Recetas Go Funcionando!"})
+		c.JSON(http.StatusOK, gin.H{"message": "✅ API Recetas Go Funcionando! (Enfoque Categorías)"})
 	})
+	log.Println("✅ Rutas adicionales configuradas.")
+
 
 	// --- 6. Arranque del Servidor ---
-	fmt.Printf("🚀 Servidor escuchando en http://localhost:%s\n", cfg.AppPort)
-	err = router.Run(":" + cfg.AppPort)
-	if err != nil {
-		panic(fmt.Sprintf("❌ Error al iniciar el servidor Gin: %v", err))
+	serverAddr := fmt.Sprintf(":%d", cfg.Server.Port)
+	fmt.Printf("🚀 Servidor (Categorías) escuchando en http://localhost%s\n", serverAddr)
+	if err := router.Run(serverAddr); err != nil {
+		log.Fatalf("❌ Error al iniciar el servidor Gin: %v", err)
 	}
 }

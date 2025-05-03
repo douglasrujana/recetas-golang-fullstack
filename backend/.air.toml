@@ -1,0 +1,32 @@
+# .air.toml - Configuración EXPLÍCITA para Windows
+
+# Directorio raíz del proyecto que air observará.
+root = "."
+# Directorio temporal para los archivos de build.
+tmp_dir = "tmp"
+
+[build]
+# --- 🔥 CORRECCIÓN PARA WINDOWS (Explícita) ---
+# 1. Especificamos explícitamente la salida como ./tmp/main.exe
+# 2. Usamos la ruta correcta ./cmd/app
+cmd = "go build -o ./tmp/main.exe ./cmd/app"
+
+# --- 🔥 CORRECCIÓN PARA WINDOWS (Explícita) ---
+# 3. Apuntamos directamente al archivo .exe
+bin = "tmp/main.exe"
+
+# Archivos/directorios a observar.
+include_ext = ["go", "tpl", "tmpl", "html", "yaml", "env"]
+exclude_dir = ["assets", "tmp", "vendor", "node_modules", "frontend", "dist"]
+include_file = ["go.mod", "go.sum", "config.yaml", ".env"]
+
+# Habilitar colores en la salida.
+color_enabled = true
+
+[log]
+# Mostrar logs de air.
+time = true
+
+[misc]
+# Limpiar el directorio tmp al iniciar air.
+clean_on_exit = true

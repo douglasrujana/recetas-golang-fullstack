@@ -1,7 +1,7 @@
 // backend/internal/domain/categoria.go
 package domain
 
-import "time" // Solo si necesitas CreatedAt/UpdatedAt aquí
+// import "time" // Solo si necesitas CreatedAt/UpdatedAt aquí
 
 // Categoria representa la entidad de negocio pura para una categoría.
 // [✅ BUENA PRÁCTICA] Sin tags de Gorm. Representa el negocio, no la base de datos.
