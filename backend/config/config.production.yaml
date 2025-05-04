@@ -1,0 +1,12 @@
+# backend/config/config.production.yaml
+
+app_env: "production"
+
+server:
+  port: 80 # O el puerto estándar para producción
+
+# database:
+  # host, port, user, password, name SE LEERÁN DE ENV VARS (APP_DATABASE_HOST, etc.)
+  # params: "parseTime=true&tls=true" # Ejemplo: parámetros específicos de prod
+
+# secret_key: # SE LEERÁ DE ENV VAR (APP_SECRET_KEY)

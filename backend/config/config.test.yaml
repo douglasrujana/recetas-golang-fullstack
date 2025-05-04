@@ -1,0 +1,18 @@
+# backend/config/config.test.yaml
+# Configuración para tests de integración (conecta a la BD Docker en puerto 3307)
+
+app_env: "test" # Indica claramente el entorno
+
+server:
+  # Puerto diferente por si los tests levantan un servidor (no es nuestro caso ahora)
+  # port: 8081
+
+database:
+  host: "127.0.0.1" # IP del host donde Docker expone el puerto
+  port: 3307        # Puerto EXPUESTO por Docker para la BD de test
+  user: "testuser"
+  password: "testpassword" # Password definida en docker-compose.yml
+  name: "recetas_test_db"  # Nombre de la BD definida en docker-compose.yml
+  params: "parseTime=true"
+
+secret_key: "test_secret_key_just_for_tests" # Clave secreta solo para pruebas

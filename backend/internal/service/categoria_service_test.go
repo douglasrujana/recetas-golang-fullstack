@@ -4,12 +4,12 @@ package service
 import (
 	"backend/internal/domain"
 	"backend/internal/repository"
-	"backend/internal/service/mocks" // Importamos nuestro mock generado
+	"backend/internal/repository/mocks" // Importamos nuestro mock generado
 	"context"
 	"errors"
 	"testing" // Paquete estándar de testing
 
-	"github.com/stretchr/testify/assert" // Para aserciones
+	//"github.com/stretchr/testify/assert" // Para aserciones
 	"github.com/stretchr/testify/mock"   // Para configurar el mock
 	"github.com/stretchr/testify/suite"  // Para organizar tests
 )
@@ -127,7 +127,6 @@ func (s *CategoriaServiceTestSuite) TestGetByID_RepositoryError() {
 	s.mockRepo.AssertExpectations(s.T())
 }
 
-
 func (s *CategoriaServiceTestSuite) TestCreate_Success() {
     // Arrange
     ctx := context.Background()
@@ -147,7 +146,6 @@ func (s *CategoriaServiceTestSuite) TestCreate_Success() {
         return cat.Nombre == nombreLimpio && cat.Slug == slugEsperado && cat.ID == 100 // El ID lo asignamos aquí para simular GORM
     })).Return(nil).Once()
 
-
     // Act
     nuevaCategoria, err := s.service.Create(ctx, input)
 
@@ -159,7 +157,6 @@ func (s *CategoriaServiceTestSuite) TestCreate_Success() {
     s.Equal(uint(100), nuevaCategoria.ID) // Verificar el ID asignado por el "repo"
     s.mockRepo.AssertExpectations(s.T())
 }
-
 
 func (s *CategoriaServiceTestSuite) TestCreate_NombreVacio() {
 	// Arrange
@@ -221,7 +218,6 @@ func (s *CategoriaServiceTestSuite) TestCreate_RepoGetError() {
     s.mockRepo.AssertNotCalled(s.T(), "Create")
 }
 
-
 func (s *CategoriaServiceTestSuite) TestCreate_RepoCreateError() {
 	// Arrange
 	ctx := context.Background()
@@ -247,7 +243,6 @@ func (s *CategoriaServiceTestSuite) TestCreate_RepoCreateError() {
 	s.ErrorIs(err, mockError)
 	s.mockRepo.AssertExpectations(s.T())
 }
-
 
 // --- Tests para Update ---
 // (Similar estructura: Success, NotFound, NombreVacio, NombreYaExisteEnOtro, RepoGetError, RepoUpdateError)
