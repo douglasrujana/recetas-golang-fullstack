@@ -1,46 +1,127 @@
-# .golangci.yml
+# .golangci.yml - Configuración Completa y Actualizada (v3)
+
+# --- Configuración General de Ejecución ---
 run:
+  # Timeout para la ejecución completa de todos los linters.
+  # 5 minutos suele ser suficiente, ajusta si tienes un proyecto muy grande.
   timeout: 5m
-  skip-dirs:
-    - vendor/
+
+  # (Opcional) Puedes especificar el número de CPU a usar (0 = todas las disponibles)
+  # concurrency: 4
+
+  # (Opcional) Salir inmediatamente si se encuentra el primer error (útil en CI)
+  # fast-exit: true
+
+# --- Configuración de Linters ---
 linters:
+  # Deshabilitar todos los linters por defecto y habilitar explícitamente
+  # los que queremos usar. Esto da más control y evita sorpresas.
+  disable-all: true
   enable:
-    - gofmt
-    - goimports
-    - revive # Reemplazo mejorado de golint
-    - govet
-    - errcheck
-    - staticcheck
-    - unused
-    - ineffassign
-    - typecheck
-    - gosimple
-    - structcheck
-    - varcheck
-    - nilerr
-    - bodyclose
-    - exportloopref
-    - goconst
-    - gocyclo # Controla la complejidad ciclomática
-    - dogsled # Detecta asignaciones redundantes
-    - dupl # Busca código duplicado
-    - errorlint # Buenas prácticas con errores envueltos
-    - exhaustive # Verifica exhaustividad en switch y maps
-    - funlen # Controla longitud de funciones
-    - gocritic # Muchas comprobaciones valiosas
-    - whitespace
-  disable:
-    - golint # Deprecado, usamos revive
-  # Puedes ajustar la configuración de linters específicos aquí
+    # --- Calidad de Código Esencial ---
+    - gofmt         # Requerir código formateado con gofmt
+    - goimports     # Requerir formato de goimports (organiza imports)
+    - revive        # Sucesor mejorado de golint (muchas reglas de estilo/buenas prácticas)
+    - govet         # Análisis de código estándar de Go (errores sospechosos)
+    - errcheck      # Verifica que los errores devueltos se chequeen (¡CRÍTICO!)
+    - staticcheck   # Gran conjunto de análisis estáticos (bugs, rendimiento, simplificaciones)
+    - unused        # Encuentra código no utilizado (reemplaza structcheck, varcheck)
+    - ineffassign   # Detecta asignaciones inefectivas
+    - typecheck     # Asegura que el código compile correctamente (fundamental)
+    - usetesting    # Buenas prácticas en tests (reemplaza tenv)
+
+    # --- Buenas Prácticas y Mantenibilidad ---
+    - gosimple      # Sugiere simplificaciones en el código
+    - goconst       # Encuentra strings que podrían ser constantes
+    - gocyclo       # Controla la complejidad ciclomática
+    - dogsled       # Detecta asignaciones redundantes (ej: x, y := a, a)
+    - dupl          # Busca código duplicado (mantener DRY)
+    - errorlint     # Buenas prácticas con errores envueltos (fmt.Errorf %w, errors.Is/As)
+    - exhaustive    # Verifica exhaustividad en switch de enums y claves de maps literales
+    - funlen        # Controla la longitud de las funciones
+    - gocritic      # Muchas comprobaciones valiosas adicionales (estilo, rendimiento, bugs)
+    - nestif        # Detecta anidamiento excesivo de 'if'
+    - prealloc      # Encuentra slices/maps que podrían pre-alocarse para rendimiento
+    - whitespace    # Detecta espacios en blanco innecesarios o inconsistentes
+    - bodyclose     # Asegura que los cuerpos de respuesta HTTP (resp.Body) se cierren
+    - copyloopvar   # Detecta referencias incorrectas a variables de bucle (reemplaza exportloopref)
+
+  # No necesitamos 'disable:' aquí ya que usamos 'disable-all: true'.
+
+# --- Configuraciones Específicas por Linter ---
 linters-settings:
   gocyclo:
-    min-complexity: 15 # Ajusta según tu preferencia (10-15 es común)
+    # Complejidad ciclomática máxima permitida por función.
+    # Valores comunes: 10 (muy estricto), 15 (razonable), 20 (más permisivo).
+    min-complexity: 15
   funlen:
-    lines: 80 # Líneas máximas por función
-    statements: 50 # Sentencias máximas por función
+    # Líneas máximas por función.
+    lines: 80
+    # Sentencias máximas por función.
+    statements: 50
   goimports:
-    local-prefixes: github.com/douglasrujana/recetas-golang-fullstack # Ajusta a tu path de módulo
+    # Prefijos locales para agrupar imports de tu proyecto.
+    # ¡¡AJUSTA ESTO AL PATH DE TU MÓDULO GO!!
+    local-prefixes: backend # o github.com/douglasrujana/recetas-golang-fullstack/backend
+  revive:
+    # Nivel de confianza mínimo para reportar un problema (0.0 a 1.0). 0.8 es un buen default.
+    confidence: 0.8
+    # Puedes añadir configuraciones de reglas específicas de revive aquí si lo necesitas.
+    # Consulta la documentación de revive para ver las reglas disponibles.
+    # rules:
+    #   - name: line-length-limit
+    #     arguments: [120] # Ejemplo: Permitir líneas más largas
+  errorlint:
+    # Forzar el uso de %w para envolver errores con fmt.Errorf
+    errorf: true
+    # Forzar chequeos con errors.Is/As en lugar de comparación directa o type assertion
+    asserts: true
+    # Forzar comparación de errores con errors.Is
+    comparison: true
+  dupl:
+    # Umbral de líneas duplicadas para considerar un problema.
+    threshold: 100 # Ajusta según necesidad
+
+# --- Configuración del Manejo de Issues/Errores ---
 issues:
+  # Excluir directorios completos del análisis.
+  # Usa la sintaxis moderna 'exclude-dirs'.
+  exclude-dirs:
+    - vendor/       # Siempre excluir dependencias de vendor
+    - tmp/          # Excluir directorio temporal de 'air'
+    - assets/       # Ejemplo: excluir assets si contienen archivos no Go
+    - node_modules/ # Si tuvieras algo de Node.js cerca
+    - migrations/   # Excluir si solo contienen SQL y no código Go analizable
+    # Añade aquí otros directorios que no deban ser analizados.
+
+  # Excluir reglas específicas o mensajes en ciertos archivos/líneas.
+  # ¡Usar con moderación! Es mejor arreglar el código si es posible.
+  exclude_rules:
+    # Ejemplo: Ignorar errores no chequeados en archivos de test (a veces intencional)
+    # - path: _test\.go
+    #   linters:
+    #     - errcheck
+    # Ejemplo: Ignorar complejidad ciclomática en una función específica
+    # - path: mi_paquete/mi_archivo_complejo\.go
+    #   text: "cognitive complexity.*exceeds" # Mensaje parcial del error de gocyclo/gocognit
+    #   linters:
+    #     - gocognit
+    #     - gocyclo
+
+  # No fallar el proceso si hay advertencias de configuración
+  # (como deprecaciones de linters que ya no están habilitados).
   exclude-use-default: false
-  max-issues-per-linter: 0 # Muestra todos los issues
+
+  # Máximo de issues del mismo tipo por linter (0 = sin límite).
+  max-issues-per-linter: 0
+  # Máximo de issues idénticos (mismo mensaje y línea) (0 = sin límite).
   max-same-issues: 0
+
+# --- (Opcional) Configuración de Salida ---
+# output:
+#   # Formato de la salida (colored-line-number, line-number, json, tab, checkstyle, etc.)
+#   format: colored-line-number
+#   # Imprimir líneas con problemas
+#   print-issued-lines: true
+#   # Imprimir nombre del linter en la salida
+#   print-linter-name: true
