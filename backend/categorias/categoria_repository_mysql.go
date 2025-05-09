@@ -1,22 +1,19 @@
-// backend/internal/repository/mysql/categoria_repository.go (Adaptado para Modelos Separados)
-package mysql
+// backend/categorias/categoria_repository_mysql.go (Adaptado para Modelos Separados)
+package categorias
 
 import (
-	"backend/internal/domain"
-	"backend/internal/repository"
 	"context"
 	"errors"
 	"fmt"
-
 	"gorm.io/gorm"
+	"backend/shared/repository"
 )
 
 // Struct y New (sin cambios)
 type categoriaRepository struct { db *gorm.DB }
-func NewCategoriaRepository(db *gorm.DB) repository.CategoriaRepository { return &categoriaRepository{db: db} }
+func NewCategoriaRepository(db *gorm.DB) CategoriaRepository { return &categoriaRepository{db: db} }
 
-
-func (r *categoriaRepository) GetAll(ctx context.Context) ([]domain.Categoria, error) {
+func (r *categoriaRepository) GetAll(ctx context.Context) ([]Categoria, error) {
 	var models []CategoriaModel // Slice del modelo GORM
 	// Usar el modelo GORM en la consulta. TableName() se usará automáticamente.
 	if err := r.db.WithContext(ctx).Order("id desc").Find(&models).Error; err != nil {
@@ -26,7 +23,7 @@ func (r *categoriaRepository) GetAll(ctx context.Context) ([]domain.Categoria, e
 	return ModelsToDomains(models), nil
 }
 
-func (r *categoriaRepository) GetByID(ctx context.Context, id uint) (*domain.Categoria, error) {
+func (r *categoriaRepository) GetByID(ctx context.Context, id uint) (*Categoria, error) {
 	var model CategoriaModel // Modelo GORM
 	// Usar el modelo GORM en First. TableName() se usará.
 	if err := r.db.WithContext(ctx).First(&model, id).Error; err != nil {
@@ -38,7 +35,7 @@ func (r *categoriaRepository) GetByID(ctx context.Context, id uint) (*domain.Cat
 	return model.ToDomain(), nil // Mapear a dominio antes de devolver
 }
 
- func (r *categoriaRepository) GetBySlug(ctx context.Context, slug string) (*domain.Categoria, error) {
+ func (r *categoriaRepository) GetBySlug(ctx context.Context, slug string) (*Categoria, error) {
 	var model CategoriaModel
 	if err := r.db.WithContext(ctx).Where("slug = ?", slug).First(&model).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -49,7 +46,7 @@ func (r *categoriaRepository) GetByID(ctx context.Context, id uint) (*domain.Cat
 	return model.ToDomain(), nil
 }
 
-func (r *categoriaRepository) GetByNombre(ctx context.Context, nombre string) (*domain.Categoria, error) {
+func (r *categoriaRepository) GetByNombre(ctx context.Context, nombre string) (*Categoria, error) {
 	var model CategoriaModel
 	if err := r.db.WithContext(ctx).Where("nombre = ?", nombre).First(&model).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -60,7 +57,7 @@ func (r *categoriaRepository) GetByNombre(ctx context.Context, nombre string) (*
 	return model.ToDomain(), nil
 }
 
-func (r *categoriaRepository) Create(ctx context.Context, categoria *domain.Categoria) error {
+func (r *categoriaRepository) Create(ctx context.Context, categoria *Categoria) error {
 	model := FromDomain(categoria) // Mapear Dominio -> Modelo GORM
 	// Crear usando el Modelo GORM
 	if err := r.db.WithContext(ctx).Create(model).Error; err != nil {
@@ -72,7 +69,7 @@ func (r *categoriaRepository) Create(ctx context.Context, categoria *domain.Cate
 	return nil
 }
 
-func (r *categoriaRepository) Update(ctx context.Context, categoria *domain.Categoria) error {
+func (r *categoriaRepository) Update(ctx context.Context, categoria *Categoria) error {
 	model := FromDomain(categoria) // Mapear Dominio -> Modelo GORM
 	// Usar Updates con el Modelo GORM es más seguro que Save
 	// Asegúrate que el modelo tenga el ID correcto

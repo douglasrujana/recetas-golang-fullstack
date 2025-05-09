@@ -1,30 +1,25 @@
-# docker-compose.test.yml (Versión Simplificada con Script Init)
+# docker-compose.test.yml
 version: '3.8'
 
 services:
   db_test:
-    image: mysql:8.0
-    container_name: recetas_db_test
-    # Variables para crear usuario/db base Y CONTRASEÑA ROOT
+    image: mysql:8.0 # O la versión que prefieras/uses
+    container_name: recetas_db_test_integration # Nombre claro para tests
     environment:
-      MYSQL_ROOT_PASSWORD: testrootpassword # Necesaria para que el script init pueda correr como root implícitamente
-      MYSQL_DATABASE: recetas_test_db
-      MYSQL_USER: testuser
-      MYSQL_PASSWORD: testpassword
+      MYSQL_ROOT_PASSWORD: testrootpassword  # Contraseña para root
+      MYSQL_DATABASE: recetas_test_db     # Nombre de la BD a crear automáticamente
     ports:
-      - "3307:3306"
+      - "3307:3306" # Mapea puerto 3307 del host al 3306 del contenedor
     volumes:
-      # Montar el script de inicialización robusto
-      - ./scripts/mysql/init-test-db.sql:/docker-entrypoint-initdb.d/init-test-db.sql
-    # Comentar o eliminar volumen de datos persistentes
-    # - db_test_data:/var/lib/mysql
+      # Monta SÓLO el script que crea usuario/permisos para 'testuser'
+      - ./scripts/mysql/init-test-db.sql:/docker-entrypoint-initdb.d/01-init-permissions.sql
+    # Eliminar o comentar volumen de datos persistentes para asegurar estado limpio
+    # volumes:
+    #   db_test_data:
     healthcheck:
-      # Healthcheck puede seguir usando testuser, debería funcionar DESPUÉS de que el script init corra
+      # Verifica si 'testuser' puede conectar (debe ser creado por el script)
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "testuser", "-ptestpassword"]
       interval: 10s
       timeout: 5s
-      retries: 5
-      start_period: 30s # Dar tiempo a que el script init se ejecute
-
-# volumes:
-#   db_test_data:
+      retries: 10      # Más reintentos por si tarda en aplicar permisos
+      start_period: 45s # Más tiempo inicial

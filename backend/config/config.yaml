@@ -1,0 +1,31 @@
+# Configuración para el entorno de DESARROLLO LOCAL
+
+# Indica el entorno (opcional aquí, LoadConfig lo deduce o usa default)
+# app_env: development
+
+server:
+  # Puerto en el que correrá el servidor Gin localmente
+  port: 8080
+
+database:
+  # Host de tu base de datos local (usualmente localhost o 127.0.0.1)
+  host: "127.0.0.1"
+  # Puerto estándar de MySQL (o el que use tu instancia local)
+  port: 3306
+  # Usuario de tu base de datos local
+  user: "root" # <-- ¡REEMPLAZA con tu usuario MySQL local!
+  # Contraseña de tu base de datos local
+  password: "" # <-- ¡REEMPLAZA con tu contraseña MySQL local!
+  # Nombre de tu base de datos de desarrollo (según logs anteriores)
+  name: "golang-recetas"
+  # Parámetros de conexión comunes
+  params: "parseTime=true"
+
+# Clave secreta para desarrollo (puede ser simple, NO USAR EN PRODUCCIÓN)
+# Usada para JWT u otras funciones de seguridad.
+secret_key: "un-secreto-simple-para-desarrollo"
+
+# Puedes añadir otras secciones de configuración aquí si las necesitas
+# ejemplo_api_externa:
+#   url: "http://localhost:9999/api"
+#   api_key: "dev_api_key"

@@ -1,27 +1,27 @@
-// backend/internal/repository/mysql/categoria_repository_test.go
-package mysql
+// backend/categorias/categoria_repository_test.go
+package categorias
 
 import (
-	"backend/internal/config"
-	"backend/internal/database" // Usado para conectar en SetupSuite
-	"backend/internal/domain"  // Necesario para comparar resultados
-	"backend/internal/repository" // Interfaz y errores del repo
+	"backend/shared/config"
+	"backend/shared/database" // Usado para conectar en SetupSuite
+	"backend/shared/repository"
 	"context"
-	// "errors" // Necesario para errors.Is
-	"fmt"    // Necesario para Printf y Sprintf
-	"os"     // Necesario para os.Getenv y os.Setenv
+	//"errors" // Necesario para errors.Is
+	"fmt"     // Necesario para Printf y Sprintf
+	"os"      // Necesario para os.Getenv y os.Setenv
 	"testing" // Paquete de testing estándar
 	"time"    // Necesario para time.Now y WithinDuration
+
 	//"github.com/stretchr/testify/require" // Usamos require para fallos críticos
-	"github.com/stretchr/testify/suite"  // Para organizar tests
-	"gorm.io/gorm"                 // Necesario para gorm.DeletedAt y gorm.Session
+	"github.com/stretchr/testify/suite" // Para organizar tests
+	"gorm.io/gorm"                      // Necesario para gorm.DeletedAt y gorm.Session
 )
 
 // CategoriaRepositoryIntegrationTestSuite define la suite para tests de integración.
 type CategoriaRepositoryIntegrationTestSuite struct {
 	suite.Suite                      // Embeber suite para métodos como T(), SetupTest, etc.
 	db     *gorm.DB                   // Conexión a la BD de prueba REAL
-	repo   repository.CategoriaRepository // Instancia REAL del repositorio bajo test
+	repo   CategoriaRepository // Instancia REAL del repositorio bajo test
 	cfg    config.Config              // Configuración cargada
 	dbName string                     // Nombre de la BD de test
 }
@@ -40,8 +40,8 @@ func (s *CategoriaRepositoryIntegrationTestSuite) SetupSuite() {
 	})
 
 	// --- Cargar Configuración de Test ---
-	cfg, err := config.LoadConfig("../../../config") // Ruta relativa desde este archivo
-	s.Require().NoError(err, "SetupSuite: Falló al cargar config de test desde ../../../config")
+	cfg, err := config.LoadConfig("../shared/config") // Ruta relativa desde este archivo
+	s.Require().NoError(err, "SetupSuite: Falló al cargar config de test desde ../shared/config")
 	s.Require().Equal("test", cfg.AppEnv, "SetupSuite: La configuración cargada debe ser del entorno 'test'")
 	s.cfg = cfg
 	s.dbName = cfg.Database.Name
@@ -115,7 +115,7 @@ func TestCategoriaRepositoryIntegrationTestSuite(t *testing.T) {
 
 func (s *CategoriaRepositoryIntegrationTestSuite) TestCreateAndGetByID_Success() {
 	ctx := context.Background()
-	categoriaACrear := &domain.Categoria{
+	categoriaACrear := &Categoria{
 		Nombre: " Postres Fríos ",
 		Slug:   "postres-frios",
 	}
@@ -149,8 +149,8 @@ func (s *CategoriaRepositoryIntegrationTestSuite) TestGetAll_EmptyAndWithData() 
 	s.Require().NotNil(categoriasVacias)
 	s.Require().Len(categoriasVacias, 0)
 
-	cat1 := &domain.Categoria{Nombre: "Ensaladas", Slug: "ensaladas"}
-	cat2 := &domain.Categoria{Nombre: "Sopas", Slug: "sopas"}
+	cat1 := &Categoria{Nombre: "Ensaladas", Slug: "ensaladas"}
+	cat2 := &Categoria{Nombre: "Sopas", Slug: "sopas"}
 	s.Require().NoError(s.repo.Create(ctx, cat1))
 	s.Require().NoError(s.repo.Create(ctx, cat2))
 
@@ -165,7 +165,7 @@ func (s *CategoriaRepositoryIntegrationTestSuite) TestGetAll_EmptyAndWithData() 
 func (s *CategoriaRepositoryIntegrationTestSuite) TestGetBySlug_Success() {
 	ctx := context.Background()
 	slugTarget := "bebidas-sin-alcohol"
-	cat := &domain.Categoria{Nombre: "Bebidas Sin Alcohol", Slug: slugTarget}
+	cat := &Categoria{Nombre: "Bebidas Sin Alcohol", Slug: slugTarget}
 	s.Require().NoError(s.repo.Create(ctx, cat))
 	categoriaObtenida, err := s.repo.GetBySlug(ctx, slugTarget)
 	s.Require().NoError(err)
@@ -184,7 +184,7 @@ func (s *CategoriaRepositoryIntegrationTestSuite) TestGetBySlug_NotFound() {
 func (s *CategoriaRepositoryIntegrationTestSuite) TestGetByNombre_Success() {
 	ctx := context.Background()
 	nombreTarget := " Comida Italiana "
-	cat := &domain.Categoria{Nombre: nombreTarget, Slug: "comida-italiana"}
+	cat := &Categoria{Nombre: nombreTarget, Slug: "comida-italiana"}
 	s.Require().NoError(s.repo.Create(ctx, cat))
 	categoriaObtenida, err := s.repo.GetByNombre(ctx, nombreTarget)
 	s.Require().NoError(err)
@@ -202,12 +202,12 @@ func (s *CategoriaRepositoryIntegrationTestSuite) TestGetByNombre_NotFound() {
 
 func (s *CategoriaRepositoryIntegrationTestSuite) TestUpdate_Success() {
 	ctx := context.Background()
-	catInicial := &domain.Categoria{Nombre: "Vegana", Slug: "vegana"}
+	catInicial := &Categoria{Nombre: "Vegana", Slug: "vegana"}
 	s.Require().NoError(s.repo.Create(ctx, catInicial))
 	id := catInicial.ID
 	tiempoCreacion := catInicial.CreatedAt
 
-	catActualizada := &domain.Categoria{
+	catActualizada := &Categoria{
 		ID:     id,
 		Nombre: " Vegetariana ",
 		Slug:   "vegetariana-slug",
@@ -225,7 +225,7 @@ func (s *CategoriaRepositoryIntegrationTestSuite) TestUpdate_Success() {
 
 func (s *CategoriaRepositoryIntegrationTestSuite) TestUpdate_NotFound() {
 	ctx := context.Background()
-	catInexistente := &domain.Categoria{ID: 9999, Nombre: "No Existe", Slug: "no-existe"}
+	catInexistente := &Categoria{ID: 9999, Nombre: "No Existe", Slug: "no-existe"}
 	err := s.repo.Update(ctx, catInexistente)
 	s.Require().Error(err)
 	s.Require().ErrorIs(err, repository.ErrRecordNotFound)
@@ -233,7 +233,7 @@ func (s *CategoriaRepositoryIntegrationTestSuite) TestUpdate_NotFound() {
 
 func (s *CategoriaRepositoryIntegrationTestSuite) TestDelete_Success() {
 	ctx := context.Background()
-	cat := &domain.Categoria{Nombre: "Para Borrar", Slug: "para-borrar"}
+	cat := &Categoria{Nombre: "Para Borrar", Slug: "para-borrar"}
 	s.Require().NoError(s.repo.Create(ctx, cat))
 	id := cat.ID
 	err := s.repo.Delete(ctx, id)

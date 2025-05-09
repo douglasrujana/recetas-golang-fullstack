@@ -22,7 +22,3 @@ FLUSH PRIVILEGES;
 
 -- Puedes imprimir algo en logs de MySQL para depuración (no se ve en consola docker)
 -- SELECT 'init-test-db.sql ejecutado correctamente';
-
--- Mensaje para logs de MySQL (opcional)
-SELECT 'Usuario testuser creado y permisos otorgados en recetas_test_db.' AS status;
-
