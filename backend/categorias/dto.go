@@ -1,4 +1,4 @@
-// backend/internal/handler/dto/dto.go
+// backend/categorias/dto/dto.go
 package categorias
 
 // --- DTOs de Entrada (Request) ---

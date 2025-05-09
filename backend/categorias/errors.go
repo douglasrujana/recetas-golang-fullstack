@@ -1,4 +1,4 @@
-// backend/internal/domain/errors.go (o categoria.go)
+// backend/categorias/errors.go (o categoria.go)
 package categorias
 
 import "errors"

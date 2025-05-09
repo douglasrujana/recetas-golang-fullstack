@@ -1,4 +1,5 @@
-// backend/categorias/categoria_repository_mysql.go (Adaptado para Modelos Separados)
+// backend/categorias/categoria_repository_mysql_test.go (Adaptado para Modelos Separados)
+// Test de integración para CategoriaRepository
 package categorias
 
 import (

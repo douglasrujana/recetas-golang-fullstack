@@ -1,4 +1,4 @@
-// backend/internal/service/categoria_service.go
+// backend/categorias/categoria_service.go
 package categorias
 
 import (

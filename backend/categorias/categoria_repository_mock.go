@@ -1,5 +1,5 @@
-// backend/internal/service/mocks/categoria_repository_mock.go
-// O podría ser backend/internal/repository/mocks/categoria_repository_mock.go
+// backend/categorias/mocks/categoria_repository_mock.go
+// O podría ser backend/categorias/mocks/categoria_repository_mock.go
 package categorias
 
 import (

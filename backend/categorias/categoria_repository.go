@@ -1,4 +1,4 @@
-// backend/internal/repository/categoria_repository.go
+// backend/categorias/categoria_repository.go
 package categorias
 
 import (

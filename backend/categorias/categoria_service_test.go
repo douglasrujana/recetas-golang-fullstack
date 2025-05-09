@@ -1,4 +1,4 @@
-// backend/categoria_service_test.go
+// backend/categorias/categoria_service_test.go
 // Test unitarios para CategoriaService usando mocks
 package categorias
 

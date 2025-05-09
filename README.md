@@ -30,3 +30,9 @@ docker-compose -f docker-compose.test.yml up --build --force-recreate
 
 go test -v ./categorias/...
 
+# para correr solo la suite de tests unitarios del servicio.
+go test -v -run TestCategoriaServiceTestSuite ./categorias/... 
+
+# para correr solo la suite de tests de integración del repositorio.
+go test -v -run TestCategoriaRepositoryIntegrationTestSuite ./categorias/... 
+

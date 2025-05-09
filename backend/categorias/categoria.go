@@ -1,4 +1,4 @@
-// backend/internal/domain/categoria.go
+// backend/categorias/categoria.go
 package categorias
 
 import "time" // Solo si necesitas CreatedAt/UpdatedAt aquí
