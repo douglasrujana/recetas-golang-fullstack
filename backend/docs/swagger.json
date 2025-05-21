@@ -1,0 +1,435 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Esta es una API para gestionar recetas, categorías e ingredientes.",
+        "title": "API de Recetas Fullstack",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "Soporte API",
+            "url": "http://www.ejemplo.com/support",
+            "email": "support@ejemplo.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api/v1",
+    "paths": {
+        "/categorias/{categoria_id}/recetas": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Devuelve una lista de recetas que pertenecen a una categoría específica.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Recetas",
+                    "Categorias"
+                ],
+                "summary": "Obtiene recetas por ID de categoría",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID de la Categoría para filtrar recetas",
+                        "name": "categoria_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de recetas para la categoría",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/recetas.RecetaResponseDTO"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "ID de categoría inválido",
+                        "schema": {
+                            "$ref": "#/definitions/apitypes.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Categoría no encontrada o sin recetas",
+                        "schema": {
+                            "$ref": "#/definitions/apitypes.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno del servidor",
+                        "schema": {
+                            "$ref": "#/definitions/apitypes.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/recetas": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Crea una nueva receta con los datos proporcionados. La foto se maneja como un nombre de archivo o URL.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Recetas"
+                ],
+                "summary": "Crea una nueva receta",
+                "parameters": [
+                    {
+                        "description": "Datos de la Receta a Crear",
+                        "name": "receta",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/recetas.RecetaRequestDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Receta creada exitosamente",
+                        "schema": {
+                            "$ref": "#/definitions/recetas.RecetaResponseDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Datos de entrada inválidos (ej: validación, categoría ID no existe)",
+                        "schema": {
+                            "$ref": "#/definitions/apitypes.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno del servidor",
+                        "schema": {
+                            "$ref": "#/definitions/apitypes.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/recetas/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Devuelve los detalles de una receta específica por su ID, con su categoría.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Recetas"
+                ],
+                "summary": "Obtiene una receta por ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID de la Receta",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Receta encontrada",
+                        "schema": {
+                            "$ref": "#/definitions/recetas.RecetaResponseDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "ID inválido",
+                        "schema": {
+                            "$ref": "#/definitions/apitypes.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Receta no encontrada",
+                        "schema": {
+                            "$ref": "#/definitions/apitypes.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno del servidor",
+                        "schema": {
+                            "$ref": "#/definitions/apitypes.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Actualiza una receta existente con los datos proporcionados. La foto se maneja como un nombre de archivo o URL.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Recetas"
+                ],
+                "summary": "Actualiza una receta existente",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID de la Receta a Actualizar",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Datos de la Receta a Actualizar",
+                        "name": "receta",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/recetas.RecetaRequestDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Receta actualizada exitosamente",
+                        "schema": {
+                            "$ref": "#/definitions/recetas.RecetaResponseDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Datos de entrada inválidos (ej: validación, categoría ID no existe)",
+                        "schema": {
+                            "$ref": "#/definitions/apitypes.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Receta no encontrada",
+                        "schema": {
+                            "$ref": "#/definitions/apitypes.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno del servidor",
+                        "schema": {
+                            "$ref": "#/definitions/apitypes.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Elimina permanentemente una receta específica por su ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Recetas"
+                ],
+                "summary": "Elimina una receta por ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID de la Receta a Eliminar",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Sin contenido (eliminación exitosa)"
+                    },
+                    "400": {
+                        "description": "ID inválido",
+                        "schema": {
+                            "$ref": "#/definitions/apitypes.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Receta no encontrada",
+                        "schema": {
+                            "$ref": "#/definitions/apitypes.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno del servidor",
+                        "schema": {
+                            "$ref": "#/definitions/apitypes.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "apitypes.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "details": {
+                    "description": "Ejemplo más simple para map",
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "example": {
+                        "field_name": "problema de validación"
+                    }
+                },
+                "error": {
+                    "description": "Mensaje principal del error",
+                    "type": "string",
+                    "example": "Mensaje descriptivo del error"
+                }
+            }
+        },
+        "categorias.CategoriaResponseDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "@description ID de la categoría",
+                    "type": "integer",
+                    "example": 1
+                },
+                "nombre": {
+                    "type": "string",
+                    "example": "Postres"
+                },
+                "slug": {
+                    "type": "string",
+                    "example": "postres"
+                }
+            }
+        },
+        "recetas.RecetaRequestDTO": {
+            "type": "object",
+            "required": [
+                "categoria_id",
+                "descripcion",
+                "nombre",
+                "tiempo_preparacion"
+            ],
+            "properties": {
+                "categoria_id": {
+                    "description": "@description ID de la categoría a la que pertenece",
+                    "type": "integer",
+                    "example": 1
+                },
+                "descripcion": {
+                    "description": "@description Pasos o descripción de la receta",
+                    "type": "string",
+                    "example": "Una deliciosa paella tradicional..."
+                },
+                "foto": {
+                    "description": "@description Nombre del archivo de imagen o URL (opcional en request)",
+                    "type": "string",
+                    "example": "paella.jpg"
+                },
+                "nombre": {
+                    "description": "@description Nombre de la receta",
+                    "type": "string",
+                    "maxLength": 150,
+                    "minLength": 3,
+                    "example": "Paella de Mariscos"
+                },
+                "tiempo_preparacion": {
+                    "description": "@description Tiempo estimado de preparación",
+                    "type": "string",
+                    "maxLength": 50,
+                    "example": "1 hora 30 mins"
+                }
+            }
+        },
+        "recetas.RecetaResponseDTO": {
+            "description": "Estructura para enviar datos de receta al cliente desde la API.",
+            "type": "object",
+            "properties": {
+                "categoria": {
+                    "description": "Objeto de Categoría anidado (usando el DTO de 'categorias')",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/categorias.CategoriaResponseDTO"
+                        }
+                    ]
+                },
+                "created_at": {
+                    "description": "Formato consistente (ej: RFC3339)",
+                    "type": "string",
+                    "example": "2025-05-17T10:00:00Z"
+                },
+                "descripcion": {
+                    "type": "string",
+                    "example": "Una deliciosa paella tradicional..."
+                },
+                "foto": {
+                    "description": "URL completa o path relativo accesible",
+                    "type": "string",
+                    "example": "uploads/recetas/paella.jpg"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "nombre": {
+                    "type": "string",
+                    "example": "Paella de Mariscos"
+                },
+                "slug": {
+                    "type": "string",
+                    "example": "paella-de-mariscos"
+                },
+                "tiempo_preparacion": {
+                    "type": "string",
+                    "example": "1 hora 30 mins"
+                },
+                "updated_at": {
+                    "description": "Formato consistente",
+                    "type": "string",
+                    "example": "2025-05-17T10:00:00Z"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "description": "Escribe \"Bearer\" seguido de un espacio y tu token JWT.",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}

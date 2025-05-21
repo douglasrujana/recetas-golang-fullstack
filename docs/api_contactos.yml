@@ -1,0 +1,128 @@
+openapi: 3.0.3
+info:
+  title: API de Formulario de Contacto
+  description: |-
+    Esta API permite a los usuarios enviar mensajes a través de un formulario de contacto.
+    Los mensajes son validados y almacenados para su posterior revisión.
+  version: v1.0.0
+  contact:
+    name: [Tu Nombre/Nombre del Curso]
+    url: [URL de tu curso/sitio web, opcional]
+    email: [Tu email, opcional]
+servers:
+  - url: http://localhost:8080/api/v1 # Cambia esto por tu URL de desarrollo/producción
+    description: Servidor de Desarrollo Local
+  # Puedes añadir más servidores (staging, producción)
+  # - url: https://api.ejemplo.com/v1
+  #   description: Servidor de Producción
+
+tags:
+  - name: Contacto
+    description: Operaciones relacionadas con el envío de mensajes de contacto.
+
+paths:
+  /contact:
+    post:
+      tags:
+        - Contacto
+      summary: Envía un nuevo mensaje de contacto.
+      description: Recibe los datos del formulario de contacto, los valida y los almacena.
+      operationId: submitContactForm # Útil para generación de código cliente/servidor
+      requestBody:
+        description: Datos del mensaje de contacto a enviar.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactRequest'
+      responses:
+        '201':
+          description: Mensaje enviado y creado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactSuccessResponse'
+        '400':
+          description: Solicitud incorrecta debido a datos de entrada inválidos.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Error interno del servidor al procesar la solicitud.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    ContactRequest:
+      type: object
+      required:
+        - name
+        - email
+        - message
+      properties:
+        name:
+          type: string
+          description: Nombre completo del remitente.
+          example: "Juan Pérez"
+          minLength: 2
+          maxLength: 100
+        email:
+          type: string
+          format: email
+          description: Dirección de correo electrónico del remitente.
+          example: "juan.perez@example.com"
+        subject:
+          type: string
+          description: Asunto del mensaje (opcional).
+          example: "Consulta sobre el producto X"
+          maxLength: 255
+        message:
+          type: string
+          description: Contenido del mensaje.
+          example: "Hola, me gustaría obtener más información sobre..."
+          minLength: 10
+          maxLength: 5000 # Ajusta según necesidad
+
+    ContactSuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Mensaje de confirmación.
+          example: "Mensaje enviado correctamente."
+        contact_id: # Opcional, si devuelves el ID del nuevo registro
+          type: integer
+          format: int64
+          description: ID del mensaje de contacto creado.
+          example: 123
+
+    ErrorResponse:
+      type: object
+      properties:
+        message: # Para errores 500 o errores genéricos 400
+          type: string
+          description: Descripción general del error.
+          example: "Ocurrió un error interno al procesar la solicitud."
+        errors: # Para errores de validación 400
+          type: object
+          description: Objeto que detalla los errores de validación por campo.
+          additionalProperties: # Permite tener claves dinámicas (nombres de campos)
+            type: string
+            description: Mensaje de error específico para el campo.
+          example:
+            email: "El formato del email es inválido."
+            message: "El mensaje no puede estar vacío y debe tener al menos 10 caracteres."
+
+# securitySchemes: # Si tuvieras autenticación, la definirías aquí
+  # Ejemplo:
+  # bearerAuth:
+  #   type: http
+  #   scheme: bearer
+  #   bearerFormat: JWT
+
+# security: # Y la aplicarías globalmente o por operación
+  # - bearerAuth: []

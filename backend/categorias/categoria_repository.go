@@ -1,4 +1,8 @@
 // backend/categorias/categoria_repository.go
+
+// Este archivo define la interface CategoriaRepository.
+// Depende SOLO del dominio y no contiene implementaciones.
+
 package categorias
 
 import (

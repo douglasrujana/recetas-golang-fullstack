@@ -1,4 +1,7 @@
 // backend/categorias/errors.go (o categoria.go)
+
+// Este archivo define errores específicos del dominio de negocio para las categorías.
+
 package categorias
 
 import "errors"

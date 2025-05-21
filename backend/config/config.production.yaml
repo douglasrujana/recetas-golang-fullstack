@@ -1,4 +1,5 @@
 # backend/config/config.production.yaml
+# --- Configuración de Entorno ---
 
 app_env: "production"
 

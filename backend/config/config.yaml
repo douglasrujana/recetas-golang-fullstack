@@ -3,10 +3,12 @@
 # Indica el entorno (opcional aquí, LoadConfig lo deduce o usa default)
 # app_env: development
 
+# Configuración del servidor Gin localmente
 server:
   # Puerto en el que correrá el servidor Gin localmente
   port: 8080
 
+# Configuración de la base de datos local
 database:
   # Host de tu base de datos local (usualmente localhost o 127.0.0.1)
   host: "127.0.0.1"
@@ -29,3 +31,19 @@ secret_key: "un-secreto-simple-para-desarrollo"
 # ejemplo_api_externa:
 #   url: "http://localhost:9999/api"
 #   api_key: "dev_api_key"
+
+# --- SMTP ---
+smtp:
+  host: "sandbox.smtp.mailtrap.io" # Host de Mailtrap
+  port: 2525                        # Puerto común de Mailtrap para STARTTLS o sin encriptar
+  username: "cfe4933e4e3135" # Reemplaza con tu username real
+  password: "83c29647f03428" # Reemplaza con tu password real
+  from: "contacto@tuapp.com"       # El email que aparecerá como remitente
+  admin_to: "tuemaildeadmin@ejemplo.com" # El email donde quieres recibir las notificaciones
+
+# --- JWT ---
+jwt:
+  secret_key: "un-secreto-simple-para-desarrollo"
+  token_expires_in_minutes: 60
+  issuer: "tu_issuer_jwt_ejemplo"
+

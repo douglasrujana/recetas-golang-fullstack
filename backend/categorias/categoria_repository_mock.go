@@ -1,5 +1,9 @@
 // backend/categorias/mocks/categoria_repository_mock.go
 // O podría ser backend/categorias/mocks/categoria_repository_mock.go
+
+// Este archivo define una implementación mock de la interfaz CategoriaRepository.
+// Se utiliza para pruebas unitarias y de integración.
+
 package categorias
 
 import (
@@ -16,7 +20,6 @@ type CategoriaRepositoryMock struct {
 var _ CategoriaRepository = (*CategoriaRepositoryMock)(nil)
 
 // Implementar CADA método de la interfaz repository.CategoriaRepository
-
 func (m *CategoriaRepositoryMock) GetAll(ctx context.Context) ([]Categoria, error) {
 	// Le decimos a testify/mock qué argumentos esperamos y qué debemos devolver
 	args := m.Called(ctx)

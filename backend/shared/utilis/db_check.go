@@ -1,9 +1,12 @@
 // backend/internal/utils/db_check.go
+
+// Este archivo contiene la lógica de chequeo de conexión a la base de datos.
+// Utiliza GORM para la definición de la tabla y el mapeo de campos.
+// No contiene tags de Gorm. Representa el negocio, no la base de datos.
+
 package utils
 
 import (
-	"backend/internal/config"   // Necesita cargar la config
-	"backend/internal/database" // Necesita intentar conectar
 	"fmt"
 	"log"
 )

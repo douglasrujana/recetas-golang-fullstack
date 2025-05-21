@@ -1,3 +1,9 @@
+// backend/internal/utils/imagenes.go
+
+// Este archivo contiene la lógica de manejo de imágenes.
+// Utiliza GORM para la definición de la tabla y el mapeo de campos.
+// No contiene tags de Gorm. Representa el negocio, no la base de datos.
+
 package utils
 
 import (

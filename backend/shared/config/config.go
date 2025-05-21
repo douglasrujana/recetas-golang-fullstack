@@ -1,4 +1,9 @@
 // backend/internal/config/config.go (REFACTORIZADO para Entornos)
+
+// Este archivo define la configuración de la aplicación.
+// Utiliza Viper para cargar la configuración desde archivos YAML y variables de entorno.
+// Permite cargar archivos de configuración específicos para cada entorno (desarrollo, pruebas, producción).
+
 package config
 
 import (
@@ -8,12 +13,30 @@ import (
 	"github.com/spf13/viper"
 )
 
+// --- JWTConfig contiene la configuración para el manejo de tokens JWT. ---
+type JWTConfig struct {
+	SecretKey          string `mapstructure:"secret_key"`
+	TokenExpiresInMinutes int    `mapstructure:"token_expires_in_minutes"`
+	Issuer             string `mapstructure:"issuer"`
+}
+
+// --- SMTPConfig contiene la configuración para el cliente SMTP. ---
+type SMTPConfig struct {
+	Host     string `mapstructure:"host"`
+	Port     int    `mapstructure:"port"`
+	Username string `mapstructure:"username"`
+	Password string `mapstructure:"password"` // ¡Este es un secreto!
+	From     string `mapstructure:"from"`     // Email "De" por defecto para los correos
+	AdminTo  string `mapstructure:"admin_to"` // Email del admin a quien se envían los contactos
+}
+
 // --- Structs Config, ServerConfig, DatabaseConfig (sin cambios) ---
 type Config struct {
 	AppEnv    string         `mapstructure:"app_env"`
 	SecretKey string         `mapstructure:"secret_key"`
 	Server    ServerConfig   `mapstructure:"server"`
 	Database  DatabaseConfig `mapstructure:"database"`
+	SMTP      SMTPConfig     `mapstructure:"smtp"`
 }
 type ServerConfig struct {
 	Port int `mapstructure:"port"`

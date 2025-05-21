@@ -1,5 +1,9 @@
 // backend/categorias/categoria_service_test.go
 // Test unitarios para CategoriaService usando mocks
+
+// Este archivo define los tests unitarios para el servicio de categorías.
+// Utiliza mocks para simular el repositorio y probar el servicio en isolation.
+
 package categorias
 
 import (

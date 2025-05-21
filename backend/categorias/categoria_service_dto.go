@@ -1,5 +1,10 @@
-package categorias
+// backend/categorias/errors.go (o categoria.go)
 
+// Este archivo define errores específicos del dominio de negocio para las categorías.
+
+// --- DTOs específicos para la entrada del SERVICIO ---
+// (Pueden ser iguales a los del handler, pero definirlos aquí desacopla)
+package categorias
 // --- DTOs específicos para la entrada del SERVICIO ---
 // (Pueden ser iguales a los del handler, pero definirlos aquí desacopla)
 

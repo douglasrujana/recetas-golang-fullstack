@@ -1,4 +1,8 @@
 // backend/categorias/categoria_service.go
+
+// Este archivo define la implementación del servicio de categorías.
+// Implementa la lógica de negocio para las categorías.
+
 package categorias
 
 import (
@@ -11,7 +15,6 @@ import (
 	"github.com/gosimple/slug" // Para generar slugs
 	"backend/shared/repository"
 )
-
 // --- Interfaz del Servicio ---
 // Define el contrato que este servicio ofrece a las capas externas (Handlers).
 

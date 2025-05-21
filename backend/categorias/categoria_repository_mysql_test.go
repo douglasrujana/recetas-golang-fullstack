@@ -1,4 +1,9 @@
 // backend/categorias/categoria_repository_test.go
+
+// Este archivo define una suite de tests para la implementación real de CategoriaRepository.
+// Se utiliza para pruebas de integración con la base de datos.
+
+
 package categorias
 
 import (

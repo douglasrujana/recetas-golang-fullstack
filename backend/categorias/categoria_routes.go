@@ -1,4 +1,9 @@
 // backend/categorias/categoria_routes.go
+
+// Este archivo define las rutas específicas para la entidad Categoria.
+// Recibe el grupo de router BASE de la API (ej: el que se crea con router.Group("/api/v1"))
+// y el handler específico para categorías.
+
 package categorias // ¡El paquete debe ser 'categorias'!
 
 import (

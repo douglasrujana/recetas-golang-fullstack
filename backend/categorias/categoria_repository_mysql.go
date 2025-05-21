@@ -1,5 +1,9 @@
 // backend/categorias/categoria_repository_mysql.go (Adaptado para Modelos Separados)
 // Implementación de la interface CategoriaRepository
+
+// Este archivo define la implementación con GORM de RecetaRepository.
+// Pertenece al paquete de la característica 'categorias'
+
 package categorias
 
 import (

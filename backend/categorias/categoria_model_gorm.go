@@ -1,4 +1,9 @@
 // backend/categorias/categoria_model_gorm.go
+
+// Este archivo define el modelo de persistencia para una categoría.
+// Utiliza GORM para la definición de la tabla y el mapeo de campos.
+// No contiene tags de Gorm. Representa el negocio, no la base de datos.
+
 package categorias // Asegúrate que el paquete sea 'categorias'
 
 import (

@@ -1,0 +1,15 @@
+# backend/config/config.example.yaml
+# ... (server, database, secret_key como antes) ...
+
+smtp:
+  host: "sandbox.smtp.mailtrap.io"
+  port: 2525 # O 587, 465, 25 según tu proveedor y configuración
+  username: "tu_usuario_mailtrap_ejemplo"
+  password: "tu_password_mailtrap_ejemplo"
+  from: "noreply@turecetaapp.com"
+  admin_to: "admin@turecetaapp.com"
+
+jwt:
+  secret_key: "tu_clave_secreta_jwt_ejemplo"
+  token_expires_in_minutes: 60
+  issuer: "tu_issuer_jwt_ejemplo"

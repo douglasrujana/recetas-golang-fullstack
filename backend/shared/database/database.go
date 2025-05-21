@@ -1,4 +1,9 @@
 // backend/internal/database/database.go
+
+// Este archivo contiene la lógica de conexión a la base de datos.
+// Utiliza GORM para la definición de la tabla y el mapeo de campos.
+// No contiene tags de Gorm. Representa el negocio, no la base de datos.
+
 package database
 
 import (
